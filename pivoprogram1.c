@@ -7,7 +7,9 @@
 #define LedPin2 2
 #define LedPin3 3
 #define ButtonPin 4
-#define LedPin 5
+
+//#define BuzzPin 5
+#define BuzzPin 1
 
 
 #include <lcd.h>
@@ -69,6 +71,10 @@ int main(void)
             pinMode(LedPin1, OUTPUT);
             pinMode(LedPin2, OUTPUT);
             pinMode(LedPin3, OUTPUT);
+            pinMode(BuzzPin, OUTPUT);
+            pinMode(ButtonPin, INPUT);
+
+            pullUpDnControl(ButtonPin, PUD_UP);
 
 
             lcd = lcdInit (2, 16, 4, LCD_RS, LCD_E, LCD_D4, LCD_D5, LCD_D6, LCD_D7, 0, 0, 0, 0);
@@ -130,13 +136,16 @@ int main(void)
 
 
 
-    lcdPosition(lcd, 9, 0);
+    lcdPosition(lcd, 10, 0);
     lcdPrintf(lcd, "%.1f C", temp);
 
     if(temp<=24.0)
     {
     digitalWrite(LedPin0, LOW); //led on
             delay(1);
+
+
+
     }
     else if(temp>24.0){
 
@@ -149,7 +158,54 @@ int main(void)
 x=1;
 while(x == 1){
 //buzz
-    lcdPosition(lcd, 9, 1);
+
+
+
+
+//delay(1000);
+digitalWrite(BuzzPin, 1); //led on
+delay(100);
+digitalWrite(BuzzPin, 0);
+
+for(i=1;i < 32767; i++){
+if(digitalRead(ButtonPin) == 0)
+{
+x=0;
+}}
+delay(100);
+digitalWrite(BuzzPin, 1); //led on
+delay(100);
+    for(i=1;i < 32767; i++){
+if(digitalRead(ButtonPin) == 0)
+{
+x=0;
+}
+}
+
+digitalWrite(BuzzPin, 0);
+delay(100);
+    for(i=1;i < 32767; i++){
+if(digitalRead(ButtonPin) == 0)
+{
+x=0;
+}
+}
+digitalWrite(BuzzPin, 1); //led on
+delay(100);
+digitalWrite(BuzzPin, 0);
+//sleep(1);
+
+digitalWrite(BuzzPin, 0);
+
+for(i=1;i < 32767; i++){
+if(digitalRead(ButtonPin) == 0)
+{
+x=0;
+}
+}
+
+
+    lcdPosition(lcd, 0, 1);
     lcdPrintf(lcd, "Pridaj slad");
 
 
