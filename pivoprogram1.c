@@ -462,9 +462,9 @@ if (dlzkavaru>=c1){
 } //koniec while 3
 
     lcdPosition(lcd, 0, 0);             //premazanie displaya
-    lcdPrintf(lcd, "                ");
+    lcdPrintf(lcd, "                .");
     lcdPosition(lcd, 0, 1);
-    lcdPrintf(lcd, "                ");
+    lcdPrintf(lcd, "                .");
 
 x=1;
     while(x == 1){ //while 4 stupanie na t2=======================================================================================================================
