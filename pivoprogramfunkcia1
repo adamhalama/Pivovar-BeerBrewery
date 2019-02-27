@@ -33,38 +33,47 @@
 
 #include <time.h>
 
-int zahriev(int t, int lcd;);
-int udrztSlad(int t, int c, int Tx,int Txi, int vysladzStarttime, int lcd;);
-int udrztChmel(int t, int c, int lcd;);
-int peepanieSlad(int lcd;);
-int peepanieChmel(int lcd;);
+int zahriev(int t;);
+int udrztSlad(int t, int c);
+int udrztChmel(int t, int c);
+int peepanieSlad();
+int peepanieChmel();
 float teplota(float temp);
 
+int lcd;
+int Tx;
+int Txi;
+int TxHlas;
+int vysladzStarttime;
+int iSlad;
+int iChmel;
 
 int main(void)
 {
 	time_t seconds;
 
-    int vysladzStarttime;
     int starttime;
     //tx teplota v stupnoch C
     //cx cas v minutach
 
     int t1=24, c1=1;
-    int t2=25, c2=1;
+    int t2=25, c2=2;
     int t3=26, c3=1;
     int t4=27, c4=1;
 
     int cht1=26, chc1=1;
-    int cht2=100, chc2=1;
-    int cht3=100, chc3=1;
-    int cht4=100, chc4=1;
+    int cht2=26, chc2=1;
+    int cht3=26, chc3=1;
+    int cht4=26, chc4=1;
     int cht5=100, chc5=1;
 
-    int Tx=c1+c2+c3+c4;
-    int Txi=1;
+    Tx=c1+c2+c3+c4;
+    Txi=1;
+    TxHlas=Tx-3;
 
-    int lcd;
+    iSlad=0;
+    iChmel=0;
+
 
 
 
@@ -93,46 +102,49 @@ int main(void)
     starttime=seconds;
     printf("startovne sekundy: %d\n", starttime);
 
-zahriev(t1, lcd);
 
-peepanieSlad(lcd);
+
+
+zahriev(t1);
+
+peepanieSlad(t1);
 
 seconds = time(NULL);
-vysladzStarttime=seconds;
+vysladzStarttime=seconds; //zaciatok vysladzania
 
-Txi=udrztSlad(t1,c1,Tx,Txi, vysladzStarttime, lcd);
+Txi=udrztSlad(t1,c1);
 
-zahriev(t2, lcd);
+zahriev(t2);
 
-Txi=udrztSlad(t2,c2,Tx,Txi, vysladzStarttime, lcd);
-printf("som tu 105\n");
-zahriev(t3, lcd);
+Txi=udrztSlad(t2,c2);
 
-Txi=udrztSlad(t3,c3,Tx,Txi, vysladzStarttime, lcd);
-printf("som tu 109\n");
-zahriev(t4, lcd);
-printf("som tu 111\n");
-Txi=udrztSlad(t4,c4,Tx,Txi ,vysladzStarttime, lcd); //koniec vysladzania
-printf("som tu 113\n");
-zahriev(cht1, lcd);
-printf("som tu 115\n");
-udrztChmel(cht1, chc1, lcd);
+zahriev(t3);
 
-zahriev(cht2, lcd);
+Txi=udrztSlad(t3,c3);
 
-udrztChmel(cht2, chc2, lcd);
+zahriev(t4);
 
-zahriev(cht3, lcd);
+Txi=udrztSlad(t4,c4); //koniec vysladzania
 
-udrztChmel(cht3, chc3, lcd);
+zahriev(cht1); //zaciatok chmelovaru
 
-zahriev(cht4, lcd);
+udrztChmel(cht1, chc1);
 
-udrztChmel(cht4, chc4, lcd);
+zahriev(cht2);
 
-zahriev(cht5, lcd);
+udrztChmel(cht2, chc2);
 
-udrztChmel(cht5, chc5, lcd);
+zahriev(cht3);
+
+udrztChmel(cht3, chc3);
+
+zahriev(cht4);
+
+udrztChmel(cht4, chc4);
+
+zahriev(cht5);
+
+udrztChmel(cht5, chc5); //koniec chmelovaru
 
 return 0;
 
@@ -187,13 +199,10 @@ float teplota(float temp){
 
 }
 
-int zahriev(int t, int lcd){
+int zahriev(int t){
 
     float temp;
-
-    int x=1;
-
-
+    int x;
 
 
 
@@ -266,18 +275,16 @@ x=1;
     }
 } //koniec while
 
-
+    lcdClear(lcd);
 
     return 0;
 } //koniec funkcie
 
-int udrztSlad(int t, int c, int Tx,int Txi, int vysladzStarttime, int lcd){
+int udrztSlad(int t, int c){
 
     float temp;
 
-
     int x;
-
 
 	time_t seconds;
     int nowtime;
@@ -291,11 +298,13 @@ int udrztSlad(int t, int c, int Tx,int Txi, int vysladzStarttime, int lcd){
     int secondsInHour = 60 * 60;
     int secondsInMinute = 60;
 
-    int TxHlas=Tx-0;
 
-    printf("som tu 296 udrztSlad\n");
+    pinMode(BuzzPin, OUTPUT);
+    pinMode(ButtonPin, INPUT);
 
+    pullUpDnControl(ButtonPin, PUD_UP);
 
+    iSlad++;
 
 
 
@@ -305,16 +314,10 @@ x=1;
     while(x == 1){ //while 3 t1=======================================================================================================================
 
 			temp=teplota(temp);
-printf("som tu 306 udrztSlad\n");
+
     delay(100);
     lcdPosition(lcd, 0, 0);
-    delay(100);
-    printf("som tu 311\n");
     lcdPrintf(lcd, "%.1f C", temp);
-printf("som tu 309 udrztSlad\n");
-
-
-
 
 
     if (t>100){
@@ -370,10 +373,16 @@ printf("\n %.3f \n", dlzkavaru);
 printf("\n %d \n", TxHlas);
   if (dlzkavaru>=TxHlas){
 
-    lcdPosition(lcd, 7, 2);
-    lcdPrintf(lcd, "Priprav");
-    lcdPosition(lcd, 1, 3);
+    lcdPosition(lcd, 4, 2);
+    lcdPrintf(lcd, "             ");
+
+    lcdPosition(lcd, 7, 1);
+    lcdPrintf(lcd, "Pripr.");
+    lcdPosition(lcd, 1, 2);
     lcdPrintf(lcd, "vysladzovaciu vodu");
+    lcdPosition(lcd, 2, 3);
+    lcdPrintf(lcd, "a drz tlacitko");
+
 digitalWrite(BuzzPin, 1); //led on
 delay(100);
 digitalWrite(BuzzPin, 0); //led on
@@ -398,11 +407,22 @@ digitalWrite(BuzzPin, 1); //led on
 delay(100);
 digitalWrite(BuzzPin, 0); //led on
 
+if(digitalRead(ButtonPin) == 0)
+{
 Txi=0;
+    lcdPosition(lcd, 7, 1);
+    lcdPrintf(lcd, "      ");
+    lcdPosition(lcd, 1, 2);
+    lcdPrintf(lcd, "                  ");
+    lcdPosition(lcd, 2, 3);
+    lcdPrintf(lcd, "               ");
 printf("%d", Txi);
-
-  }
 }
+}
+}
+
+lcdPosition(lcd, 4, 2);
+lcdPrintf(lcd, "Vysladzanie %d", iSlad);
 
 
    seconds = time(NULL);
@@ -426,7 +446,7 @@ printf("%d", Txi);
 
 
 lcdPosition(lcd, 0, 1);
-lcdPrintf(lcd, "%d:%d:%d",hours1,minutes1,seconds1);
+lcdPrintf(lcd, "%d:%d:%d ",hours1,minutes1,seconds1);
 
     inputSecond=c*60; //premenenie vstupneho casu teda konecneho casu etapy na sekundy
     hours1 = (inputSecond/secondsInHour);
@@ -448,18 +468,15 @@ if (dlzkavaru>=c){
 	x=0;
 	}
 
-
-
 } //koniec while 3
 
+    lcdClear(lcd);
     return Txi;
 }
 
-int udrztChmel(int t, int c, int lcd){
+int udrztChmel(int t, int c){
 
-float temp;
-
-
+    float temp;
     int x=1;
 
 
@@ -475,11 +492,8 @@ float temp;
     int secondsInHour = 60 * 60;
     int secondsInMinute = 60;
 
-    lcd = lcdInit (4 , 20, 4, LCD_RS, LCD_E, LCD_D4, LCD_D5, LCD_D6, LCD_D7, 0, 0, 0, 0);
 
-
-
-peepanieChmel();
+peepanieChmel(t);
 
 seconds = time(NULL);
 etapaStarttime=seconds;
@@ -488,16 +502,32 @@ x=1;
 
 			temp=teplota(temp);
 
-    lcdPosition(lcd, 10, 0);
+    delay(100);
+    lcdPosition(lcd, 0, 0);
     lcdPrintf(lcd, "%.1f C", temp);
+
+
+    if (t>100){
+    delay(200);
+    lcdPosition(lcd, 13, 0);
+    lcdPrintf(lcd, "%d.0 C", t);
+    }//print pozadovanej teploty ked je vacsia ako 100
+
+    else {
+    delay(100);
+    lcdPosition(lcd, 14, 0);
+    lcdPrintf(lcd, "%d.0 C", t);
+    }
+
 
     if(temp<t){
     digitalWrite(LedPin0, LOW); //led on
     digitalWrite(LedPin1, LOW);
             delay(100);
+
     }
 
-    else {
+    else{
 
     digitalWrite(LedPin0, HIGH); //led off
     digitalWrite(LedPin1, HIGH);
@@ -508,7 +538,7 @@ x=1;
 
 
    //cas
-   seconds = time(NULL);
+    seconds = time(NULL);
     printf("aktualne sekundy: %ld\n", seconds);
     nowtime=seconds;
 
@@ -525,13 +555,22 @@ x=1;
   remainingSeconds = remainingSeconds - (minutes1*secondsInMinute);
   seconds1 = remainingSeconds;
 
-  printf("cas od zaciatku t1:  %d:%d:%d\n",hours1,minutes1,seconds1);
+  printf("cas od zaciatku:  %d:%d:%d\n",hours1,minutes1,seconds1);
 
 
+lcdPosition(lcd, 0, 1);
+lcdPrintf(lcd, "%d:%d:%d ",hours1,minutes1,seconds1);
 
-lcdPosition(lcd, 0, 0);
-lcdPrintf(lcd, "%d:%d:%d",hours1,minutes1,seconds1);
+    inputSecond=c*60; //premenenie vstupneho casu teda konecneho casu etapy na sekundy
+    hours1 = (inputSecond/secondsInHour);
 
+    remainingSeconds = inputSecond - (hours1 * secondsInHour);
+    minutes1 = remainingSeconds/secondsInMinute;
+
+    remainingSeconds = remainingSeconds - (minutes1*secondsInMinute);
+    seconds1 = remainingSeconds;
+    lcdPosition(lcd, 14, 1);
+    lcdPrintf(lcd, "%d:%d:%d",hours1,minutes1,seconds1);
 //dlzkavaru v minutach
 dlzkavaru=dlzkavaru/60;
 
@@ -543,24 +582,18 @@ if (dlzkavaru>=c){
 
 } //koniec while 3
 
+    lcdClear(lcd);
     return 0;
 }
 
-int peepanieSlad(int lcd){
+int peepanieSlad(int t){
 	int i;
-
-
-
     int x;
 
-
+    float temp;
 
     pinMode(BuzzPin, OUTPUT);
     pinMode(ButtonPin, INPUT);
-
-    printf("som tu 560\n");
-
-
 
     pullUpDnControl(ButtonPin, PUD_UP);
 x=1;
@@ -575,6 +608,22 @@ x=1;
     lcdPrintf(lcd, "a nasledne");
     lcdPosition(lcd, 3, 3);
     lcdPrintf(lcd, "stlac tlacidlo");
+
+    temp=teplota(temp);
+
+    if(temp<t){
+    digitalWrite(LedPin0, LOW); //led on
+    digitalWrite(LedPin1, LOW);
+            delay(100);
+
+    }
+
+    else{
+
+    digitalWrite(LedPin0, HIGH); //led off
+    digitalWrite(LedPin1, HIGH);
+    delay(100);
+    }
 
 digitalWrite(BuzzPin, 1); //led on
 delay(100);
@@ -700,31 +749,21 @@ x=0;
 }}
 delay(100);
 
-printf("som tu 634\n");
 
-
-
-printf("som tu 639\n");
 
 } //koniec while 2
 
+    lcdClear(lcd);
     return 0;
 }
 
-int peepanieChmel(int lcd){
+int peepanieChmel(int t){
 	int i;
-
-
-
     int x;
-
-
+    float temp;
 
     pinMode(BuzzPin, OUTPUT);
     pinMode(ButtonPin, INPUT);
-
-    printf("som tu 725\n");
-
 
 
     pullUpDnControl(ButtonPin, PUD_UP);
@@ -732,10 +771,32 @@ x=1;
     while(x == 1){ //while 2 potvdenie pridania sladu=======================================================================================================================
 
 
-    //lcdPosition(lcd, 4, 1);
-    //lcdPrintf(lcd, "Cas uplynul");
-    lcdPosition(lcd, 4, 2);
-    lcdPrintf(lcd, "pridaj chmel");
+    lcdPosition(lcd, 4, 0);
+    lcdPrintf(lcd, "Pridaj chmel");
+    lcdPosition(lcd, 5, 1);
+    lcdPrintf(lcd, "a potom to");
+    lcdPosition(lcd, 2, 2);
+    lcdPrintf(lcd, "potvrd stlacenim");
+    lcdPosition(lcd, 6, 3);
+    lcdPrintf(lcd, "tlacitka");
+
+
+    temp=teplota(temp);
+
+    if(temp<t){
+    digitalWrite(LedPin0, LOW); //led on
+    digitalWrite(LedPin1, LOW);
+            delay(100);
+
+    }
+
+    else{
+
+    digitalWrite(LedPin0, HIGH); //led off
+    digitalWrite(LedPin1, HIGH);
+    delay(100);
+    }
+
 
 
 digitalWrite(BuzzPin, 1); //led on
@@ -862,14 +923,11 @@ x=0;
 }}
 delay(100);
 
-printf("som tu 864\n");
 
 
 } //koniec while 2
 
-
-
-
+    lcdClear(lcd);
     return 0;
 }
 
