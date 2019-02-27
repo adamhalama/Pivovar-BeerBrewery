@@ -38,8 +38,9 @@ int udrztSlad(int t, int c);
 int udrztChmel(int t, int c);
 int peepanieSlad();
 int peepanieChmel();
-float teplota(float temp);
+float teplota();
 
+float temp;
 int lcd;
 int Tx;
 int Txi;
@@ -56,15 +57,15 @@ int main(void)
     //tx teplota v stupnoch C
     //cx cas v minutach
 
-    int t1=24, c1=1;
-    int t2=25, c2=2;
-    int t3=26, c3=1;
-    int t4=27, c4=1;
+    int t1=22, c1=0;
+    int t2=22, c2=0;
+    int t3=22, c3=0;
+    int t4=22, c4=0;
 
-    int cht1=26, chc1=1;
-    int cht2=26, chc2=1;
-    int cht3=26, chc3=1;
-    int cht4=26, chc4=1;
+    int cht1=22, chc1=0;
+    int cht2=22, chc2=0;
+    int cht3=22, chc3=0;
+    int cht4=22, chc4=1;
     int cht5=100, chc5=1;
 
     Tx=c1+c2+c3+c4;
@@ -151,7 +152,7 @@ return 0;
 
 } //koniec main
 
-float teplota(float temp){
+float teplota(){
 
 
 	int i, j;
@@ -189,30 +190,31 @@ float teplota(float temp){
 					tempBuf[j] = buf[i+2+j];
 				}}}
 
-		temp = (float)atoi(tempBuf) /1000 ;
+		temp = (float)atoi(tempBuf);
+
+		temp = temp /1000;
+
+		if (temp>=120){
+		temp=temp/10;
+		}
 
             printf("%.3f C\n",temp);
 		close(fd);
 
-		printf("som tu 171\n");
 		return temp;
 
 }
 
 int zahriev(int t){
 
-    float temp;
     int x;
 
 
 
-    	printf("som tu 201 zahriev\n");
-
 x=1;
 	while(x == 1){ //stupanie na zaciatocnu teplotu t1=======================================================================================================================
 
-	printf("som tu 206 zahriev\n");
-	temp=teplota(temp);
+	teplota();
 
 
     lcdPosition(lcd, 0, 0);
@@ -282,7 +284,6 @@ x=1;
 
 int udrztSlad(int t, int c){
 
-    float temp;
 
     int x;
 
@@ -313,15 +314,15 @@ etapaStarttime=seconds;
 x=1;
     while(x == 1){ //while 3 t1=======================================================================================================================
 
-			temp=teplota(temp);
+			teplota();
 
     delay(100);
     lcdPosition(lcd, 0, 0);
     lcdPrintf(lcd, "%.1f C", temp);
 
 
-    if (t>100){
-    delay(200);
+    if (t>=100){
+    delay(100);
     lcdPosition(lcd, 13, 0);
     lcdPrintf(lcd, "%d.0 C", t);
     }//print pozadovanej teploty ked je vacsia ako 100
@@ -373,8 +374,6 @@ printf("\n %.3f \n", dlzkavaru);
 printf("\n %d \n", TxHlas);
   if (dlzkavaru>=TxHlas){
 
-    lcdPosition(lcd, 4, 2);
-    lcdPrintf(lcd, "             ");
 
     lcdPosition(lcd, 7, 1);
     lcdPrintf(lcd, "Pripr.");
@@ -476,7 +475,6 @@ if (dlzkavaru>=c){
 
 int udrztChmel(int t, int c){
 
-    float temp;
     int x=1;
 
 
@@ -492,6 +490,7 @@ int udrztChmel(int t, int c){
     int secondsInHour = 60 * 60;
     int secondsInMinute = 60;
 
+    iChmel++;
 
 peepanieChmel(t);
 
@@ -500,15 +499,15 @@ etapaStarttime=seconds;
 x=1;
     while(x == 1){ //while 3 t1=======================================================================================================================
 
-			temp=teplota(temp);
+			teplota();
 
     delay(100);
     lcdPosition(lcd, 0, 0);
     lcdPrintf(lcd, "%.1f C", temp);
 
 
-    if (t>100){
-    delay(200);
+    if (t>=100){
+    delay(100);
     lcdPosition(lcd, 13, 0);
     lcdPrintf(lcd, "%d.0 C", t);
     }//print pozadovanej teploty ked je vacsia ako 100
@@ -534,6 +533,9 @@ x=1;
     delay(100);
     }
 
+
+    lcdPosition(lcd, 5, 2);
+    lcdPrintf(lcd, "Chmelovar %d", iChmel);
 
 
 
@@ -609,7 +611,7 @@ x=1;
     lcdPosition(lcd, 3, 3);
     lcdPrintf(lcd, "stlac tlacidlo");
 
-    temp=teplota(temp);
+    teplota();
 
     if(temp<t){
     digitalWrite(LedPin0, LOW); //led on
@@ -760,7 +762,6 @@ delay(100);
 int peepanieChmel(int t){
 	int i;
     int x;
-    float temp;
 
     pinMode(BuzzPin, OUTPUT);
     pinMode(ButtonPin, INPUT);
@@ -781,7 +782,7 @@ x=1;
     lcdPrintf(lcd, "tlacitka");
 
 
-    temp=teplota(temp);
+   teplota();
 
     if(temp<t){
     digitalWrite(LedPin0, LOW); //led on
