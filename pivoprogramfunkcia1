@@ -2,14 +2,13 @@
 
 #define LedPin0 0
 #define LedPin1 1
-#define LedPin2 2
-#define LedPin3 3
+
 #define ButtonPin 4
 #define ButtonPin1 28 // na dalsie tlacidla
 #define ButtonPin2 29 // na dalsie tlacidla
 
-//#define BuzzPin 5
-#define BuzzPin 3
+#define BuzzPin 5
+
 
 
 #include <lcd.h>
@@ -343,8 +342,7 @@ x=1;
     if(temp<t){
     digitalWrite(LedPin0, LOW); //led on
     digitalWrite(LedPin1, LOW);
-    digitalWrite(LedPin2, LOW);
-    digitalWrite(LedPin3, LOW);
+
             delay(100);
 
     }
@@ -353,8 +351,7 @@ x=1;
 
     digitalWrite(LedPin0, HIGH); //led off
     digitalWrite(LedPin1, HIGH);
-    digitalWrite(LedPin2, HIGH);
-    digitalWrite(LedPin3, HIGH);
+
     delay(100);
 
         x=0;
@@ -420,7 +417,6 @@ x=1;
 
     if(temp<t){
     digitalWrite(LedPin0, LOW); //led on
-    digitalWrite(LedPin1, LOW);
             delay(100);
 
     }
@@ -428,7 +424,6 @@ x=1;
     else{
 
     digitalWrite(LedPin0, HIGH); //led off
-    digitalWrite(LedPin1, HIGH);
     delay(100);
     }
 
@@ -618,7 +613,7 @@ x=1;
 
     if(temp<t){
     digitalWrite(LedPin0, LOW); //led on
-    digitalWrite(LedPin1, LOW);
+
             delay(100);
 
     }
@@ -626,7 +621,7 @@ x=1;
     else{
 
     digitalWrite(LedPin0, HIGH); //led off
-    digitalWrite(LedPin1, HIGH);
+
     delay(100);
     }
 
@@ -718,7 +713,7 @@ x=1;
 
     if(temp<t){
     digitalWrite(LedPin0, LOW); //led on
-    digitalWrite(LedPin1, LOW);
+
             delay(100);
 
     }
@@ -726,7 +721,7 @@ x=1;
     else{
 
     digitalWrite(LedPin0, HIGH); //led off
-    digitalWrite(LedPin1, HIGH);
+
     delay(100);
     }
 
@@ -889,7 +884,7 @@ x=1;
 
     if(temp<t){
     digitalWrite(LedPin0, LOW); //led on
-    digitalWrite(LedPin1, LOW);
+
             delay(100);
 
     }
@@ -897,7 +892,7 @@ x=1;
     else{
 
     digitalWrite(LedPin0, HIGH); //led off
-    digitalWrite(LedPin1, HIGH);
+
     delay(100);
     }
 
@@ -1061,7 +1056,6 @@ x=1;
 
     if(temp<t){
     digitalWrite(LedPin0, LOW); //led on
-    digitalWrite(LedPin1, LOW);
             delay(100);
 
     }
@@ -1069,7 +1063,6 @@ x=1;
     else{
 
     digitalWrite(LedPin0, HIGH); //led off
-    digitalWrite(LedPin1, HIGH);
     delay(100);
     }
 
