@@ -9,8 +9,6 @@
 
 #define BuzzPin 5
 
-
-
 #include <lcd.h>
 
 
@@ -77,8 +75,18 @@ int celkovyCasChmelovar;
 int main(void)
 {
 	time_t seconds;
+	int nowtime;
+	int dlzkavaru;
     int x=1;
     int starttime;
+
+
+    int inputSecond;
+    int hours1,minutes1,seconds1;
+    int remainingSeconds;
+    int secondsInHour = 60 * 60;
+    int secondsInMinute = 60;
+
     //tx teplota v stupnoch C
     //cx cas v minutach
 
@@ -98,13 +106,10 @@ int main(void)
     }
             printf("linker LedPin0 : GPIO %d(wiringPi pin)\n",LedPin0); //when initialize wiring successfully,print message to screen
             printf("linker LedPin1 : GPIO %d(wiringPi pin)\n",LedPin1);
-            printf("linker LedPin2 : GPIO %d(wiringPi pin)\n",LedPin2);
-            printf("linker LedPin3 : GPIO %d(wiringPi pin)\n",LedPin3);
+
 
             pinMode(LedPin0, OUTPUT);
             pinMode(LedPin1, OUTPUT);
-            pinMode(LedPin2, OUTPUT);
-            pinMode(LedPin3, OUTPUT);
             pinMode(BuzzPin, OUTPUT);
             pinMode(ButtonPin, INPUT);
             pinMode(ButtonPin1, INPUT);
@@ -118,11 +123,6 @@ int main(void)
 
 
 
-
-
-    seconds = time(NULL);
-    starttime=seconds;
-    printf("startovne sekundy: %d\n", starttime);
 
 //nastavenie teplot a casov na rmutovanie
 t0=NastavenieTeplotyCasu(60, 0);
@@ -182,6 +182,10 @@ lcdPrintf(lcd, "");
     Txi=1;
     TxHlas=Tx-20;
 
+    seconds = time(NULL);
+    starttime=seconds;
+    printf("startovne sekundy: %d\n", starttime);
+
 zahriev(t0);
 
 peepanieSlad(t0);
@@ -229,6 +233,46 @@ udrztChmel(cht4, chc4);
 
 
 udrztChmel(cht5, chc5); //koniec chmelovaru
+
+digitalWrite(BuzzPin, 1); //led on
+delay(150);
+digitalWrite(BuzzPin, 0); //led off
+delay(100);
+digitalWrite(BuzzPin, 1); //led on
+delay(150);
+digitalWrite(BuzzPin, 0); //led off
+delay(200);
+digitalWrite(BuzzPin, 1); //led on
+delay(500);
+digitalWrite(BuzzPin, 0); //led off
+
+digitalWrite(LedPin0, HIGH); //led off
+digitalWrite(LedPin1, HIGH);
+
+seconds = time(NULL);
+    printf("aktualne sekundy: %ld\n", seconds);
+    nowtime=seconds;
+
+    dlzkavaru=nowtime-starttime;
+
+
+  inputSecond=dlzkavaru;
+
+  hours1 = (inputSecond/secondsInHour);
+
+  remainingSeconds = inputSecond - (hours1 * secondsInHour);
+  minutes1 = remainingSeconds/secondsInMinute;
+
+  remainingSeconds = remainingSeconds - (minutes1*secondsInMinute);
+  seconds1 = remainingSeconds;
+
+  printf("cas od zaciatku t1:  %d:%d:%d\n",hours1,minutes1,seconds1);
+
+lcdPosition(lcd, 1, 1);
+lcdPrintf(lcd, "Celkovy cas varenia");
+lcdPosition(lcd, 6, 2);
+lcdPrintf(lcd, "%d:%d:%d ",hours1,minutes1,seconds1);
+
 
 return 0;
 
@@ -339,23 +383,25 @@ x=1;
 
 
 
-    if(temp<t){
+    if(temp<t-2){
     digitalWrite(LedPin0, LOW); //led on
     digitalWrite(LedPin1, LOW);
+}
+    else if(temp<t){
 
-            delay(100);
+    digitalWrite(LedPin0, LOW); //led on
+    digitalWrite(LedPin1, HIGH); //led off
 
-    }
-
-    else {
-
+}
+    else if(temp>=t){
     digitalWrite(LedPin0, HIGH); //led off
     digitalWrite(LedPin1, HIGH);
-
+    x=0;
     delay(100);
 
-        x=0;
     }
+
+
 } //koniec while
 
     lcdClear(lcd);
@@ -388,6 +434,14 @@ int udrztRmut(int t, int c){
 
     iSlad++;
 
+digitalWrite(BuzzPin, 1); //led on
+delay(100);
+digitalWrite(BuzzPin, 0); //led on
+delay(100);
+digitalWrite(BuzzPin, 1); //led on
+delay(100);
+digitalWrite(BuzzPin, 0); //led on
+delay(100);
 
 
 seconds = time(NULL);
@@ -520,7 +574,7 @@ lcdPrintf(lcd, "Rmutovanie %d", iSlad);
   remainingSeconds = remainingSeconds - (minutes1*secondsInMinute);
   seconds1 = remainingSeconds;
 
-  printf("cas od zaciatku t1:  %d:%d:%d\n",hours1,minutes1,seconds1);
+  printf("cas od zaciatku etapy:  %d:%d:%d\n",hours1,minutes1,seconds1);
 
 
 lcdPosition(lcd, 0, 1);
@@ -681,6 +735,7 @@ if (dlzkavaru>=c){
 
 
 } //koniec while 3
+
 
     lcdClear(lcd);
     return 0;
@@ -1035,8 +1090,6 @@ int vysladzanie(int t){
     int x;
 
     pinMode(ButtonPin, INPUT);
-
-
     pullUpDnControl(ButtonPin, PUD_UP);
 x=1;
     while(x == 1){ //while  vysladzanie=======================================================================================================================
