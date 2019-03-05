@@ -1329,7 +1329,6 @@ int x=1;
             lcdPosition(lcd, 6, 0);
             lcdPrintf(lcd, "Nastavte");
 
-
             if (y == 0){
             lcdPosition(lcd, 1, 1);
             lcdPrintf(lcd, "teplotu pri ktorej");
