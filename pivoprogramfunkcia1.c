@@ -1366,11 +1366,8 @@ int x=1;
             lcdPosition(lcd, 7, 3);
             lcdPrintf(lcd, "%d min ",vstup);
             }
-
-
             }
             printf("konecny vystup%d\n", vstup);
             lcdClear(lcd);
             return vstup;
-
 }
