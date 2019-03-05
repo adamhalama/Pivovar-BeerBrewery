@@ -122,7 +122,32 @@ int main(void)
             lcd = lcdInit (4, 20, 4, LCD_RS, LCD_E, LCD_D4, LCD_D5, LCD_D6, LCD_D7, 0, 0, 0, 0);
 
 
+    digitalWrite(LedPin0, HIGH); //rele off
+    digitalWrite(LedPin1, HIGH);
 
+    lcdPosition(lcd, 3, 1);
+    lcdPrintf(lcd,"Ak chcete zacat");
+    lcdPosition(lcd, 4, 2);
+    lcdPrintf(lcd,"stlacte tlacidlo");
+    while (x == 1){
+    if(digitalRead(ButtonPin) == 0){
+    x=0;
+}
+ }
+    lcdClear(lcd);
+    teplota();
+    lcdPosition(lcd, 9, 2);
+    lcdPrintf(lcd,"%.0f", temp);
+    delay(330);
+    teplota();
+    lcdPosition(lcd, 9, 2);
+    lcdPrintf(lcd,"%.0f", temp);
+    delay(330);
+    teplota();
+    lcdPosition(lcd, 9, 2);
+    lcdPrintf(lcd,"%.0f", temp);
+    delay(330);
+    lcdClear(lcd);
 
 //nastavenie teplot a casov na rmutovanie
 t0=NastavenieTeplotyCasu(60, 0);
@@ -405,7 +430,8 @@ x=1;
 } //koniec while
 
     lcdClear(lcd);
-
+    digitalWrite(LedPin0, HIGH); //led off
+    digitalWrite(LedPin1, HIGH);
     return 0;
 } //koniec funkcie
 
