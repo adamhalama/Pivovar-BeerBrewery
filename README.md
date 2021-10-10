@@ -1,3 +1,3 @@
 # Beer brewery
 
-Scource codes for beer brewery
+Scource codes for beer brewery development
