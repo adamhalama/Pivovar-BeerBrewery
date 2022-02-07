@@ -1,6 +1,6 @@
 # Beer brewery
 
-Scource codes for beer brewery development
+Scource code for beer brewery development
 
 This is my first piece of code which i did in high school.
 
